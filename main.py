@@ -3,6 +3,8 @@ from sklearn.cross_decomposition import CCA
 from input_data import Data
 import numpy as np
 
+##=======================================================First We Define The Functions=======================================================##
+
 def GetCorrelationMatrix(Data : dict):
     #Get the correlation matrix of a data dictionary
 
@@ -31,6 +33,8 @@ def GetCorrelationMatrix(Data : dict):
 
 
 def PrintCorrelationMatrix(keys, correlation_matrix):
+    #Print the Correlation Matrix
+
     # Set a fixed width for each column
     column_width = 50
 
@@ -44,6 +48,8 @@ def PrintCorrelationMatrix(keys, correlation_matrix):
             file.write(f"{remaining_keys[i]:<{column_width}}\t" + "\t".join(f"{value:.3f}".ljust(column_width) for value in correlation_matrix[i]) + "\n")
 
 def PrintEquation(cca, X_keys, y_keys):
+    #Print the equation mapping the canonical coefficients to each output y
+
     # Get the canonical coefficients
     canonical_coefs = cca.coef_ # Access the first component
 
@@ -60,6 +66,8 @@ def PrintEquation(cca, X_keys, y_keys):
         print(equation)
 
 def PrintXWeights(cca, X_keys, y_keys):
+    #Print the weights of X that makes up each canonical variable
+
     # Set a fixed width for each column
     column_width = 50
 
@@ -75,6 +83,8 @@ def PrintXWeights(cca, X_keys, y_keys):
             file.write(f"{X_keys[i]:<{column_width}}\t" + "\t".join(f"{value:.3f}".ljust(column_width) for value in weights[i]) + "\n")
 
 def PrintYWeights(cca, X_keys, y_keys):
+    #Print the weights of y that correspond to each canonical variable
+
     # Set a fixed width for each column
     column_width = 50
 
@@ -90,6 +100,7 @@ def PrintYWeights(cca, X_keys, y_keys):
             file.write(f"{y_keys[i]:<{column_width}}\t" + "\t".join(f"{value:.3f}".ljust(column_width) for value in weights[i]) + "\n")
     
 def PrintXLoadings(cca, X_keys, y_keys):
+    #Print the loadings for each X variable and the canonical variable, this basically shows the correlation of each canonical variable to the X variable. Higher means more strongly correlated, negative means negatively correlated
 
     # Set a fixed width for each column
     column_width = 50
@@ -107,6 +118,7 @@ def PrintXLoadings(cca, X_keys, y_keys):
 
 
 def PrintYLoadings(cca, X_keys, y_keys):
+    #Print the loadings for each Y variable and the canonical variable, showing the correlation
 
     # Set a fixed width for each column
     column_width = 50
@@ -121,8 +133,12 @@ def PrintYLoadings(cca, X_keys, y_keys):
         # Write the matrix with keys on the side
         for i in range(len(y_keys)):
             file.write(f"{y_keys[i]:<{column_width}}\t" + "\t".join(f"{value:.3f}".ljust(column_width) for value in y_loadings[i]) + "\n")
-    
 
+
+
+##=========================================================Now We Use the Functions with the Input Data============================================================#
+    
+#Get and print the correlation matrix
 correlation_matrix, remaining_keys = GetCorrelationMatrix(Data)
 PrintCorrelationMatrix(remaining_keys, correlation_matrix)
 
@@ -130,10 +146,10 @@ PrintCorrelationMatrix(remaining_keys, correlation_matrix)
 #print(Data.keys())
 
 # Extracting data from the dictionary using keys
-X_keys = ['Stroke/Bore', 'Volumetric coefficient', 'Compression ratio', 'norm. TKE', 'SA', 'Water inj.', 'EIVC']
-y_keys = ['BSFC [g/kwH]']
+X_keys = ['Stroke/Bore', 'Volumetric coefficient', 'Compression ratio', 'norm. TKE', 'SA', 'Water inj.', 'EIVC']    #Choose x_keys according to which inputs you want to include
+y_keys = ['BSFC [g/kwH]']  #Choose y_keys according to which outputs you want to model
 
-# Extracting data using keys
+# Extracting data using keys, Data is taken from input_data.py
 X = np.array([Data[key] for key in X_keys])
 y = np.array([Data[key] for key in y_keys])
 
@@ -148,9 +164,8 @@ cca = CCA(n_components)
 # Fit the CCA model
 cca.fit(X, y)
 
-# Get the loadings of the canonical variables
-loadings = cca.x_weights_
 
+#Print all equations, weights and loadings
 PrintEquation(cca, X_keys, y_keys)
 PrintXWeights(cca, X_keys, y_keys)
 PrintYWeights(cca, X_keys, y_keys)
@@ -158,17 +173,5 @@ PrintXLoadings(cca, X_keys, y_keys)
 PrintYLoadings(cca, X_keys, y_keys)
 
 
-print("loadings =", loadings)
 
-
-##Need to print the equation
-##Then print what makes up the canonical variable
-##Then print the loadings 
-##Interpret everything then try to optimize with 2/3 most important variables
-
-
-
-###Or use PLS Regression?
-
-#https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html
 
