@@ -1,0 +1,8 @@
+													C0                                                 
+Stroke/Bore                                       	0.842                                             
+Volumetric coefficient                            	0.848                                             
+Compression ratio                                 	0.000                                             
+norm. TKE                                         	2.881                                             
+SA                                                	2.885                                             
+Water inj.                                        	2.705                                             
+EIVC                                              	2.568                                             
