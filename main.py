@@ -147,7 +147,7 @@ PrintCorrelationMatrix(remaining_keys, correlation_matrix)
 
 # Extracting data from the dictionary using keys
 X_keys = ['Stroke/Bore', 'Volumetric coefficient', 'Compression ratio', 'norm. TKE', 'SA', 'Water inj.', 'EIVC']    #Choose x_keys according to which inputs you want to include
-y_keys = ['BSFC [g/kwH]']  #Choose y_keys according to which outputs you want to model
+y_keys = ['BSFC [g/kwH]', "Temp in Turbo [K]", "In cylinder max Pressure [bar]"]  #Choose y_keys according to which outputs you want to model
 
 # Extracting data using keys, Data is taken from input_data.py
 X = np.array([Data[key] for key in X_keys])
@@ -158,7 +158,7 @@ X = X.T
 y = y.T
 
 # Initialize a CCA object
-n_components = 1
+n_components = 3
 cca = CCA(n_components)
 
 # Fit the CCA model

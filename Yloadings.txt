@@ -1,2 +1,4 @@
-													C0                                                 
-BSFC [g/kwH]                                      	-1.000                                            
+													C0                                                 	C1                                                 	C2                                                 
+BSFC [g/kwH]                                      	-0.155                                            	-3.075                                            	-0.980                                            
+Temp in Turbo [K]                                 	-0.776                                            	0.539                                             	-0.098                                            
+In cylinder max Pressure [bar]                    	0.756                                             	1.080                                             	0.175                                             

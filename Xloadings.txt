@@ -1,8 +1,8 @@
-													C0                                                 
-Stroke/Bore                                       	0.842                                             
-Volumetric coefficient                            	0.848                                             
-Compression ratio                                 	0.000                                             
-norm. TKE                                         	2.881                                             
-SA                                                	2.885                                             
-Water inj.                                        	2.705                                             
-EIVC                                              	2.568                                             
+													C0                                                 	C1                                                 	C2                                                 
+Stroke/Bore                                       	0.650                                             	0.257                                             	0.623                                             
+Volumetric coefficient                            	-0.740                                            	0.458                                             	-0.583                                            
+Compression ratio                                 	0.916                                             	-0.126                                            	0.611                                             
+norm. TKE                                         	0.745                                             	0.228                                             	0.325                                             
+SA                                                	0.500                                             	0.285                                             	-0.891                                            
+Water inj.                                        	0.116                                             	0.325                                             	0.368                                             
+EIVC                                              	0.821                                             	0.883                                             	0.172                                             
