@@ -151,13 +151,15 @@ def Optimize(X_train, Y_train, X_predict, y_keys):
     in_cylinder_max_pressure = y_pred_candidates[:, 2]  # Assuming in_cylinder_max_pressure is the third column
     max_compressor_pressure = y_pred_candidates[:, 5]  # Assuming max_compressor_pressure is the sixth column
     knock_limited_mass = y_pred_candidates[:, 4]  # Assuming knock_limited_mass is the fifth column
+    torque_limit = y_pred_candidates[:,0 ]
 
     # Check if constraints are met for each candidate
     constraints_met = (
         (temp_in_turbo <= 1223.15) &
         (in_cylinder_max_pressure <= 140.0) &
         (max_compressor_pressure <= 2.5) &
-        (knock_limited_mass <= 164.0)
+        (knock_limited_mass <= 164.0) &
+        (torque_limit >= 100.0)
     )
 
     # Filter candidates that meet all constraints
@@ -177,6 +179,15 @@ def Optimize(X_train, Y_train, X_predict, y_keys):
         optimal_parameters = None
 
     return optimal_solution, optimal_parameters
+
+
+def PrintSol(opt_sol, opt_param):
+    for i in range(len(y_keys_all)):
+        print(f"Optimal {y_keys_all[i]} = {opt_sol[i]} \n")
+
+    for j in range(len(X_keys)):
+        print(f"Optimal {X_keys[j]} = {opt_param[j]} \n")
+
 
 
 ##=========================================================Now We Use the Functions with the Input Data============================================================#
@@ -228,16 +239,16 @@ PrintYLoadings(cca, X_keys, y_keys_all)
 ##Now the Optimizer, we first define the subspace of input values to be studied, this is done below, where minimum and maximum values
 #of each input parameter are given, along with the amount of data points. This should be the same for all data. Then reshaped
 
-n_data = 100
+n_data = 10
 
 # Stroke to Bore Ratio
 sbr = np.linspace(0.8, 1.3, n_data).reshape(-1, 1)
 
 # Volumetric Coefficient
-volumetric_coefficient = np.linspace(1.4, 2.2, n_data).reshape(-1, 1)
+volumetric_coefficient = np.linspace(0.7, 2.2, n_data).reshape(-1, 1)
 
 # Compression Ratio
-compression_ratio = np.linspace(8, 14, n_data).reshape(-1, 1)
+compression_ratio = np.linspace(6, 14, n_data).reshape(-1, 1)
 
 # Norm. TKE
 norm_tke = np.linspace(0.8, 1.5, n_data).reshape(-1, 1)
@@ -252,14 +263,19 @@ water_injection = np.linspace(0, 50, n_data).reshape(-1, 1)
 eivc = np.linspace(165, 230, n_data).reshape(-1, 1)
 
 # Stack all arrays vertically
-X_optimize = np.hstack((sbr, volumetric_coefficient, compression_ratio, norm_tke, spark_advance, water_injection, eivc))
+#X_optimize = np.hstack((sbr, volumetric_coefficient, compression_ratio, norm_tke, spark_advance, water_injection, eivc))
 
+# Create a grid of all possible combinations
+X_optimize = np.array(np.meshgrid(sbr, volumetric_coefficient, compression_ratio, norm_tke, spark_advance, water_injection, eivc)).T.reshape(-1, 7)
+print(X_optimize)
 
 #Finally call the optimizer function and print any results
 
-opt = Optimize(X_train = X, Y_train = y, X_predict = X_optimize, y_keys = y_keys_all)
+opt_sol, opt_param = Optimize(X_train = X, Y_train = y, X_predict = X_optimize, y_keys = y_keys_all)
 
-print(f"Optimal BSFC = {opt[0]}, Optimal Parameters = {opt[1]}")
+PrintSol(opt_sol, opt_param)
+
+
 
 
 
