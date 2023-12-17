@@ -2,8 +2,12 @@ import numpy as np
 from sklearn.cross_decomposition import CCA
 from input_data import Data
 import numpy as np
+import time
+import threading
 
 ##=======================================================First We Define The Functions=======================================================##
+
+
 
 def GetCorrelationMatrix(Data : dict):
     #Get the correlation matrix of a data dictionary
@@ -134,9 +138,21 @@ def PrintYLoadings(cca, X_keys, y_keys):
         for i in range(len(y_keys)):
             file.write(f"{y_keys[i]:<{column_width}}\t" + "\t".join(f"{value:.3f}".ljust(column_width) for value in y_loadings[i]) + "\n")
 
+#Function to print running every now and then
+# Define the function to print "Running" every 5 seconds
+def print_running():
+    while True:
+        print("Running Optimizer")
+        time.sleep(6.5)
+
 
 # Define the Optimize function
-def Optimize(X_train, Y_train, X_predict, y_keys):
+def Optimize(X_train, Y_train, X_predict, y_keys, bmep_tolerance = 5):
+
+    # Start a separate thread for periodic printing
+    print_thread = threading.Thread(target=print_running, daemon=True)
+    print_thread.start()
+
     n_components = len(y_keys)
 
     # Fit the CCA model
@@ -151,7 +167,10 @@ def Optimize(X_train, Y_train, X_predict, y_keys):
     in_cylinder_max_pressure = y_pred_candidates[:, 2]  # Assuming in_cylinder_max_pressure is the third column
     max_compressor_pressure = y_pred_candidates[:, 5]  # Assuming max_compressor_pressure is the sixth column
     knock_limited_mass = y_pred_candidates[:, 4]  # Assuming knock_limited_mass is the fifth column
-    torque_limit = y_pred_candidates[:,0 ]
+    torque_limit = y_pred_candidates[:,0 ]  #Torque limit is first column
+    bmep = y_pred_candidates[:, -1] #Bmep is the last column
+
+    optimal_bmep = 28.0
 
     # Check if constraints are met for each candidate
     constraints_met = (
@@ -159,7 +178,8 @@ def Optimize(X_train, Y_train, X_predict, y_keys):
         (in_cylinder_max_pressure <= 140.0) &
         (max_compressor_pressure <= 2.5) &
         (knock_limited_mass <= 164.0) &
-        (torque_limit >= 100.0)
+        (torque_limit >= 100.0) &
+        (abs(bmep - optimal_bmep) < bmep_tolerance)
     )
 
     # Filter candidates that meet all constraints
@@ -267,7 +287,7 @@ eivc = np.linspace(165, 230, n_data).reshape(-1, 1)
 
 # Create a grid of all possible combinations
 X_optimize = np.array(np.meshgrid(sbr, volumetric_coefficient, compression_ratio, norm_tke, spark_advance, water_injection, eivc)).T.reshape(-1, 7)
-print(X_optimize)
+#print(X_optimize)
 
 #Finally call the optimizer function and print any results
 
