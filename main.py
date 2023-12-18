@@ -176,10 +176,10 @@ def Optimize(X_train, Y_train, X_predict, y_keys, bmep_tolerance = 5):
     constraints_met = (
         (temp_in_turbo <= 1223.15) &
         (in_cylinder_max_pressure <= 140.0) &
-        (max_compressor_pressure <= 2.5) &
-        (knock_limited_mass <= 164.0) &
+        (max_compressor_pressure <= 3.0) &
+        (knock_limited_mass <= 233.3) &
         (torque_limit >= 100.0) &
-        (abs(bmep - optimal_bmep) < bmep_tolerance)
+        (abs(bmep - optimal_bmep) < bmep_tolerance) 
     )
 
     # Filter candidates that meet all constraints
@@ -265,22 +265,22 @@ n_data = 10
 sbr = np.linspace(0.8, 1.3, n_data).reshape(-1, 1)
 
 # Volumetric Coefficient
-volumetric_coefficient = np.linspace(0.7, 2.2, n_data).reshape(-1, 1)
+volumetric_coefficient = np.linspace(0.5, 2.0, n_data).reshape(-1, 1)
 
 # Compression Ratio
-compression_ratio = np.linspace(6, 14, n_data).reshape(-1, 1)
+compression_ratio = np.linspace(12, 14, n_data).reshape(-1, 1)
 
 # Norm. TKE
 norm_tke = np.linspace(0.8, 1.5, n_data).reshape(-1, 1)
 
 # Spark Advance
-spark_advance = np.linspace(0, 60, n_data).reshape(-1, 1)
+spark_advance = np.linspace(0, 40, n_data).reshape(-1, 1)
 
 # Water Injection
-water_injection = np.linspace(0, 50, n_data).reshape(-1, 1)
+water_injection = np.linspace(0, 40, n_data).reshape(-1, 1)
 
 # EIVC
-eivc = np.linspace(165, 230, n_data).reshape(-1, 1)
+eivc = np.linspace(0, 230, n_data).reshape(-1, 1)
 
 # Stack all arrays vertically
 #X_optimize = np.hstack((sbr, volumetric_coefficient, compression_ratio, norm_tke, spark_advance, water_injection, eivc))
