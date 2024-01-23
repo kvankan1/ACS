@@ -45,11 +45,13 @@ def PrintCorrelationMatrix(keys, correlation_matrix):
     # Create a text file with dictionary keys above and on the side of the matrix
     with open("correlation_matrix.txt", 'w') as file:
         # Write the keys above the matrix
-        file.write("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t".join(f"{key:<{column_width}}" for key in remaining_keys) + "\n")
+        file.write("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + 
+                   "\t".join(f"{key:<{column_width}}" for key in remaining_keys) + "\n")
 
         # Write the matrix with keys on the side
         for i in range(len(remaining_keys)):
-            file.write(f"{remaining_keys[i]:<{column_width}}\t" + "\t".join(f"{value:.3f}".ljust(column_width) for value in correlation_matrix[i]) + "\n")
+            file.write(f"{remaining_keys[i]:<{column_width}}\t" + "\t".join(f"{value:.3f}".ljust(column_width) 
+                                                                            for value in correlation_matrix[i]) + "\n")
 
 def PrintEquation(cca, X_keys, y_keys):
     #Print the equation mapping the canonical coefficients to each output y
@@ -80,7 +82,8 @@ def PrintXWeights(cca, X_keys, y_keys):
     # Create a text file with dictionary keys above and on the side of the matrix
     with open("Xweights.txt", 'w') as file:
         # Write the keys above the matrix
-        file.write("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t".join(f"C{i:<{column_width}}" for i in range(n_components)) + "\n")
+        file.write("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + 
+                   "\t" + "\t".join(f"C{i:<{column_width}}" for i in range(n_components)) + "\n")
 
         # Write the matrix with keys on the side
         for i in range(len(X_keys)):
@@ -97,14 +100,17 @@ def PrintYWeights(cca, X_keys, y_keys):
     # Create a text file with dictionary keys above and on the side of the matrix
     with open("Yweights.txt", 'w') as file:
         # Write the keys above the matrix
-        file.write("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t".join(f"C{i:<{column_width}}" for i in range(n_components)) + "\n")
+        file.write("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + 
+                   "\t".join(f"C{i:<{column_width}}" for i in range(n_components)) + "\n")
 
         # Write the matrix with keys on the side
         for i in range(len(y_keys)):
             file.write(f"{y_keys[i]:<{column_width}}\t" + "\t".join(f"{value:.3f}".ljust(column_width) for value in weights[i]) + "\n")
     
 def PrintXLoadings(cca, X_keys, y_keys):
-    #Print the loadings for each X variable and the canonical variable, this basically shows the correlation of each canonical variable to the X variable. Higher means more strongly correlated, negative means negatively correlated
+    #Print the loadings for each X variable and the canonical variable, this basically 
+    #shows the correlation of each canonical variable to the X variable. Higher means more strongly correlated, 
+    #negative means negatively correlated
 
     # Set a fixed width for each column
     column_width = 50
@@ -114,7 +120,8 @@ def PrintXLoadings(cca, X_keys, y_keys):
     # Create a text file with dictionary keys above and on the side of the matrix
     with open("Xloadings.txt", 'w') as file:
         # Write the keys above the matrix
-        file.write("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t".join(f"C{i:<{column_width}}" for i in range(n_components)) + "\n")
+        file.write("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" 
+                   + "\t" + "\t" + "\t".join(f"C{i:<{column_width}}" for i in range(n_components)) + "\n")
 
         # Write the matrix with keys on the side
         for i in range(len(X_keys)):
@@ -132,7 +139,8 @@ def PrintYLoadings(cca, X_keys, y_keys):
     # Create a text file with dictionary keys above and on the side of the matrix
     with open("Yloadings.txt", 'w') as file:
         # Write the keys above the matrix
-        file.write("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t".join(f"C{i:<{column_width}}" for i in range(n_components)) + "\n")
+        file.write("\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + "\t" + 
+                   "\t" + "\t" + "\t" + "\t" + "\t" + "\t".join(f"C{i:<{column_width}}" for i in range(n_components)) + "\n")
 
         # Write the matrix with keys on the side
         for i in range(len(y_keys)):
@@ -213,45 +221,49 @@ def PrintSol(opt_sol, opt_param):
 ##=========================================================Now We Use the Functions with the Input Data============================================================#
     
 #Get and print the correlation matrix
-correlation_matrix, remaining_keys = GetCorrelationMatrix(Data)
-PrintCorrelationMatrix(remaining_keys, correlation_matrix)
+        
+if __name__ == "__main__":
+    correlation_matrix, remaining_keys = GetCorrelationMatrix(Data)
+    PrintCorrelationMatrix(remaining_keys, correlation_matrix)
 
 
 ##===========================================================BASIC SET UP OF THE DATA===========================================================================#
 
 #We define, y_keys, used to create a CCA object to study only some keys, and y_keys_all, to keep track of all the outputs, and to use later in the optimize function
-
-# Extracting data from the dictionary using keys
-X_keys = ['Stroke/Bore', 'Volumetric coefficient', 'Compression ratio', 'norm. TKE', 'SA', 'Water inj.', 'EIVC']    #Choose x_keys according to which inputs you want to include
-y_keys_all = ["Torque [Nm]", "Temp in Turbo [K]", "In cylinder max Pressure [bar]", 'BSFC [g/kwH]',"Knock mass [mg]", "Max compressor pressure [bar]", "BMEP [bar]"]  #All outputs
-y_keys = ['BSFC [g/kwH]', "Temp in Turbo [K]", "In cylinder max Pressure [bar]"]  #Choose y_keys according to which outputs you want to model
-
-
-# Extracting data using keys, Data is taken from input_data.py
-#In this case, y is created from all the y_keys, such that all output data are placed in y
-
-X = np.array([Data[key] for key in X_keys])
-y = np.array([Data[key] for key in y_keys_all])
-
-# Transposing the arrays for the correct shape (samples x features)
-X = X.T
-y = y.T
-
-# Initialize a CCA object
-#n_components should match number of keys, right now all outputs are studied
-n_components = 7
-cca = CCA(n_components)
-
-# Fit the CCA model
-cca.fit(X, y)
+if __name__ == "__main__":
+    # Extracting data from the dictionary using keys
+    X_keys = ['Stroke/Bore', 'Volumetric coefficient', 'Compression ratio', 'norm. TKE', 'SA', 'Water inj.', 'EIVC']    
+    #Choose x_keys according to which inputs you want to include
+    y_keys_all = ["Torque [Nm]", "Temp in Turbo [K]", "In cylinder max Pressure [bar]", 'BSFC [g/kwH]',
+                  "Knock mass [mg]", "Max compressor pressure [bar]", "BMEP [bar]"]  #All outputs
+    y_keys = ['BSFC [g/kwH]', "Temp in Turbo [K]", "In cylinder max Pressure [bar]"]  #Choose y_keys according to which outputs you want to model
 
 
-#Print all equations, weights and loadings, functions are called from above
-PrintEquation(cca, X_keys, y_keys_all)
-PrintXWeights(cca, X_keys, y_keys_all)
-PrintYWeights(cca, X_keys, y_keys_all)
-PrintXLoadings(cca, X_keys, y_keys_all)
-PrintYLoadings(cca, X_keys, y_keys_all)
+    # Extracting data using keys, Data is taken from input_data.py
+    #In this case, y is created from all the y_keys, such that all output data are placed in y
+
+    X = np.array([Data[key] for key in X_keys])
+    y = np.array([Data[key] for key in y_keys_all])
+
+    # Transposing the arrays for the correct shape (samples x features)
+    X = X.T
+    y = y.T
+
+    # Initialize a CCA object
+    #n_components should match number of keys, right now all outputs are studied
+    n_components = 7
+    cca = CCA(n_components)
+
+    # Fit the CCA model
+    cca.fit(X, y)
+
+
+    #Print all equations, weights and loadings, functions are called from above
+    PrintEquation(cca, X_keys, y_keys_all)
+    PrintXWeights(cca, X_keys, y_keys_all)
+    PrintYWeights(cca, X_keys, y_keys_all)
+    PrintXLoadings(cca, X_keys, y_keys_all)
+    PrintYLoadings(cca, X_keys, y_keys_all)
 
 
 
@@ -291,9 +303,12 @@ X_optimize = np.array(np.meshgrid(sbr, volumetric_coefficient, compression_ratio
 
 #Finally call the optimizer function and print any results
 
-opt_sol, opt_param = Optimize(X_train = X, Y_train = y, X_predict = X_optimize, y_keys = y_keys_all)
+if __name__ == "__main__":
 
-PrintSol(opt_sol, opt_param)
+
+    opt_sol, opt_param = Optimize(X_train = X, Y_train = y, X_predict = X_optimize, y_keys = y_keys_all)
+
+    PrintSol(opt_sol, opt_param)
 
 
 
